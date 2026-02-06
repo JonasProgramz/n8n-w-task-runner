@@ -1,0 +1,13 @@
+# n8n data
+n8n_data/
+
+# Environment files
+.env
+.env.local
+
+# Docker
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

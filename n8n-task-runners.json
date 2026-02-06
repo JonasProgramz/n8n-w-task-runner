@@ -1,0 +1,34 @@
+{
+  "task-runners": [
+    {
+      "runner-type": "javascript",
+      "workdir": "/opt/runners/task-runner-javascript",
+      "command": "node",
+      "args": [
+        "/opt/runners/task-runner-javascript/dist/start.js"
+      ],
+      "health-check-server-port": "5681",
+      "env-overrides": {
+        "NODE_FUNCTION_ALLOW_BUILTIN": "crypto,fs,path",
+        "NODE_FUNCTION_ALLOW_EXTERNAL": "moment,uuid",
+        "N8N_RUNNERS_AUTO_SHUTDOWN_TIMEOUT": "300"
+      }
+    },
+    {
+      "runner-type": "python",
+      "workdir": "/opt/runners/task-runner-python",
+      "command": "/opt/runners/task-runner-python/.venv/bin/python",
+      "args": [
+        "-m",
+        "src.main"
+      ],
+      "health-check-server-port": "5682",
+      "env-overrides": {
+        "PYTHONPATH": "/opt/runners/task-runner-python",
+        "N8N_RUNNERS_STDLIB_ALLOW": "json,math,datetime,re,os,base64",
+        "N8N_RUNNERS_EXTERNAL_ALLOW": "numpy,pandas,PIL,piexif,exifread,fpdf",
+        "N8N_RUNNERS_AUTO_SHUTDOWN_TIMEOUT": "300"
+      }
+    }
+  ]
+}
