@@ -1,0 +1,62 @@
+{
+  "name": "Pandas Data Analysis Example",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "python",
+        "pythonCode": "import pandas as pd\nimport numpy as np\n\n# Sample sales data\ndata = {\n    'date': pd.date_range(start='2024-01-01', periods=30, freq='D'),\n    'product': np.random.choice(['Laptop', 'Phone', 'Tablet', 'Monitor'], 30),\n    'quantity': np.random.randint(1, 10, 30),\n    'price': np.random.choice([999, 799, 499, 299], 30),\n    'region': np.random.choice(['North', 'South', 'East', 'West'], 30)\n}\n\n# Create DataFrame\ndf = pd.DataFrame(data)\n\n# Calculate total sales\ndf['total_sales'] = df['quantity'] * df['price']\n\n# Analysis 1: Sales by product\nproduct_summary = df.groupby('product').agg({\n    'quantity': 'sum',\n    'total_sales': 'sum'\n}).reset_index()\nproduct_summary.columns = ['product', 'total_quantity', 'revenue']\n\n# Analysis 2: Top performing region\nregion_summary = df.groupby('region')['total_sales'].sum().reset_index()\nregion_summary = region_summary.sort_values('total_sales', ascending=False)\n\n# Analysis 3: Weekly trends\ndf['week'] = df['date'].dt.isocalendar().week\nweekly_sales = df.groupby('week')['total_sales'].sum().reset_index()\n\n# Analysis 4: High-value transactions (>$2000)\nhigh_value = df[df['total_sales'] > 2000]\n\n# Overall metrics\ntotal_revenue = df['total_sales'].sum()\navg_transaction = df['total_sales'].mean()\ntop_product = product_summary.nlargest(1, 'revenue')['product'].values[0]\ntop_region = region_summary.iloc[0]['region']\n\n# Return comprehensive results\nreturn {\n    'summary': {\n        'total_revenue': float(total_revenue),\n        'average_transaction': float(avg_transaction),\n        'total_transactions': len(df),\n        'top_product': top_product,\n        'top_region': top_region\n    },\n    'product_analysis': product_summary.to_dict('records'),\n    'region_analysis': region_summary.to_dict('records'),\n    'weekly_trends': weekly_sales.to_dict('records'),\n    'high_value_transactions': high_value[['date', 'product', 'quantity', 'price', 'total_sales']].to_dict('records'),\n    'raw_data_sample': df.head(10).to_dict('records')\n}"
+      },
+      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "name": "Pandas Analysis",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// Format the pandas analysis results for display\nconst data = $input.item.json;\n\n// Create a formatted report\nconst report = {\n  title: '📊 Sales Analysis Report',\n  generated_at: new Date().toISOString(),\n  \n  executive_summary: {\n    total_revenue: `$${data.summary.total_revenue.toLocaleString()}`,\n    average_transaction: `$${data.summary.average_transaction.toFixed(2)}`,\n    total_transactions: data.summary.total_transactions,\n    top_performing_product: data.summary.top_product,\n    best_region: data.summary.top_region\n  },\n  \n  top_products: data.product_analysis\n    .sort((a, b) => b.revenue - a.revenue)\n    .slice(0, 3)\n    .map(p => ({\n      product: p.product,\n      units_sold: p.total_quantity,\n      revenue: `$${p.revenue.toLocaleString()}`\n    })),\n  \n  regional_performance: data.region_analysis.map(r => ({\n    region: r.region,\n    revenue: `$${r.total_sales.toLocaleString()}`\n  })),\n  \n  high_value_count: data.high_value_transactions.length,\n  \n  insights: [\n    `${data.summary.top_product} is the best-selling product`,\n    `${data.summary.top_region} region generated the most revenue`,\n    `${data.high_value_transactions.length} transactions exceeded $2,000`,\n    `Average transaction value: $${data.summary.average_transaction.toFixed(2)}`\n  ]\n};\n\nreturn report;"
+      },
+      "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "name": "Format Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Pandas Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pandas Analysis": {
+      "main": [
+        [
+          {
+            "node": "Format Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {}
+}

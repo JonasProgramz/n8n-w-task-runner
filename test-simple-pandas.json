@@ -1,0 +1,39 @@
+{
+  "name": "Simple Pandas Test",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "test-trigger-001",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "python",
+        "pythonCode": "# Simple pandas test\nimport pandas as pd\nimport numpy as np\n\n# Create a small DataFrame\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'city': ['New York', 'London', 'Tokyo']\n})\n\n# Simple calculation\ndf['age_plus_10'] = df['age'] + 10\n\nreturn {\n    'status': 'success',\n    'pandas_version': pd.__version__,\n    'numpy_version': np.__version__,\n    'data': df.to_dict('records')\n}"
+      },
+      "id": "test-code-001",
+      "name": "Simple Pandas Test",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Simple Pandas Test",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {}
+}

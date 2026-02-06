@@ -1,0 +1,38 @@
+{
+  "name": "Basic Python Test",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "basic-trigger-001",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "python",
+        "pythonCode": "# Minimal test - no imports\nresult = {\n    'message': 'Hello from Python runner',\n    'calculation': 2 + 2,\n    'items': ['a', 'b', 'c']\n}\n\nreturn result"
+      },
+      "id": "basic-code-001",
+      "name": "Basic Python",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Basic Python",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
