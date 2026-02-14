@@ -25,8 +25,8 @@
       "health-check-server-port": "5682",
       "env-overrides": {
         "PYTHONPATH": "/opt/runners/task-runner-python",
-        "N8N_RUNNERS_STDLIB_ALLOW": "json,math,datetime,re,os,base64",
-        "N8N_RUNNERS_EXTERNAL_ALLOW": "numpy,pandas,PIL,piexif,exifread,fpdf",
+        "N8N_RUNNERS_STDLIB_ALLOW": "json,math,datetime,re,os,base64,io,csv,collections,itertools,functools,typing,pathlib,tempfile,struct",
+        "N8N_RUNNERS_EXTERNAL_ALLOW": "numpy,pandas,matplotlib,reportlab,PIL,piexif,exifread,fpdf,requests,dateutil,openpyxl,xlsxwriter,PyPDF2,bs4,lxml,plotly,seaborn,pdfplumber",
         "N8N_RUNNERS_AUTO_SHUTDOWN_TIMEOUT": "300"
       }
     }
