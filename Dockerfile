@@ -2,15 +2,6 @@ FROM n8nio/runners:latest
 
 USER root
 
-# Install system dependencies for matplotlib, lxml, and PDF libraries
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libfreetype6-dev \
-    libpng-dev \
-    libjpeg-dev \
-    libxml2-dev \
-    libxslt1-dev \
-    && rm -rf /var/lib/apt/lists/*
-
 # Set matplotlib to non-interactive backend
 ENV MPLBACKEND=Agg
 
